@@ -19,6 +19,7 @@ import {
 } from './utils';
 import { hasMPIDAndUserLoginChanged, hasMPIDChanged } from './user-utils';
 import { getNewIdentitiesByName } from './type-utils';
+import { processReadyQueue } from './pre-init-utils';
 
 export default function Identity(mpInstance) {
     const { getFeatureFlag, extend } = mpInstance._Helpers;
@@ -1683,6 +1684,11 @@ export default function Identity(mpInstance) {
                 'Error parsing JSON response from Identity server: ' + e
             );
         }
+        mpInstance._Store.isInitialized = true;
+
+        mpInstance._preInit.readyQueue = processReadyQueue(
+            mpInstance._preInit.readyQueue
+        );
     };
 
     // send a user identity change request on identify, login, logout, modify when any values change.
